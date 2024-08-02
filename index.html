@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTIFICATIONS BET POINT</title>
+
+    <!-- Link to Web App Manifest -->
+    <link rel="manifest" href="/manifest.json"/>
+
+    <!-- OneSignal SDK -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "2b94ad70-2518-44d4-aaef-bfb95739206f",
+          notifyButton: {
+            enable: true, // This will show the notification bell
+          },
+        });
+
+        // Optional: If supported, show subscription prompt
+        // OneSignal.showSlidedownPrompt(); // Uncomment if you want to use the slide down prompt
+      });
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/OneSignalSDKWorker.js')
+          .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+          });
+      }
+    </script>
+
+    <!-- Add to Home Screen Prompt -->
+    <style>
+      .a2hs-prompt {
+        display: none;
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        background: #fff;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+    </style>
+    <script>
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('a2hs-prompt').style.display = 'block';
+      });
+
+      function addToHomeScreen() {
+        document.getElementById('a2hs-prompt').style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          } else {
+            console.log('User dismissed the A2HS prompt');
+          }
+          deferredPrompt = null;
+        });
+      }
+
+      window.addEventListener('appinstalled', () => {
+        document.getElementById('a2hs-prompt').style.display = 'none';
+        console.log('PWA was installed');
+      });
+    </script>
+</head>
+<body>
+    <h1>CLICK THE RED BELL TO SUBSCRIBE OR UNSUBSCRIBE TO BET POINT NOTIFICATIONS</h1>
+    <!--  -->
+
+    <!-- Add to Home Screen Prompt -->
+    <div id="a2hs-prompt" class="a2hs-prompt">
+      <p>ADD THIS APP TO YOUR HOME SCREEN, ONCE INSTALLED CLICK THE RED BELL TO SUBSCRIBE TO NOTIFICATIONS.</p>
+      <button onclick="addToHomeScreen()">Add to Home Screen</button>
+    </div>
+</body>
+</html>
