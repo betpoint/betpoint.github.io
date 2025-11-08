@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIGNAL ALERTS BET POINT</title>
 
-  <!-- Link to Web App Manifest -->
+  <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json"/>
 
   <!-- OneSignal SDK -->
@@ -15,9 +15,7 @@
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
         appId: "2b94ad70-2518-44d4-aaef-bfb95739206f",
-        notifyButton: {
-          enable: true, // Red bell visible after install
-        },
+        notifyButton: { enable: false } // disable default bell
       });
     });
   </script>
@@ -35,7 +33,6 @@
     }
   </script>
 
-  <!-- Styles -->
   <style>
     html, body {
       margin: 0;
@@ -50,70 +47,53 @@
       border: none;
     }
 
-    /* Add-to-Home-Screen prompt */
-    .a2hs-prompt {
-      display: none;
+    /* Floating Subscribe Button */
+    #subscribeBtn {
       position: fixed;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
-      background: #fff;
-      padding: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .a2hs-prompt button {
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
       padding: 12px 20px;
       font-size: 16px;
       border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      background-color: #007bff;
+      border-radius: 50px;
+      background-color: #e63946;
       color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
   </style>
 
   <!-- Add to Home Screen Logic -->
   <script>
     let deferredPrompt;
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('a2hs-prompt').style.display = 'block';
+      // Optional: show your own A2HS UI
+      console.log('Add to Home Screen prompt available');
     });
 
     function addToHomeScreen() {
-      document.getElementById('a2hs-prompt').style.display = 'none';
+      if (!deferredPrompt) return;
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the A2HS prompt');
-        } else {
-          console.log('User dismissed the A2HS prompt');
-        }
+        console.log('User choice:', choiceResult.outcome);
         deferredPrompt = null;
       });
     }
-
-    window.addEventListener('appinstalled', () => {
-      document.getElementById('a2hs-prompt').style.display = 'none';
-      console.log('PWA was installed');
-    });
   </script>
 </head>
 <body>
-  <!-- Add-to-Home-Screen Prompt -->
-  <div id="a2hs-prompt" class="a2hs-prompt">
-    <p>ADD THIS APP TO YOUR HOME SCREEN TO ENABLE NOTIFICATIONS.</p>
-    <button onclick="addToHomeScreen()">Add to Home Screen</button>
-  </div>
 
   <!-- Embed Glide app -->
-  <iframe src="https://betpoint.glide.page"></iframe>
+  <iframe src="https://betpoint.glide.page/"></iframe>
+
+  <!-- Floating Subscribe Button -->
+  <button id="subscribeBtn" onclick="OneSignal.push(function() { OneSignal.showNativePrompt(); });">
+    Subscribe
+  </button>
+
 </body>
 </html>
 
