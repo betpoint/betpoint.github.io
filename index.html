@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIGNAL ALERTS BET POINT</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Alerts — Bet Point</title>
 
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="/manifest.json"/>
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="/manifest.json" />
 
   <!-- OneSignal SDK -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -15,88 +15,105 @@
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
         appId: "2b94ad70-2518-44d4-aaef-bfb95739206f",
-        notifyButton: { enable: false } // disable default bell
+        notifyButton: { enable: false } // use custom button
       });
     });
   </script>
 
-  <!-- Service Worker Registration -->
+  <!-- Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/OneSignalSDKWorker.js')
-        .then(function(registration) {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(function(error) {
-          console.log('Service Worker registration failed:', error);
-        });
+        .then(reg => console.log('Service Worker registered', reg.scope))
+        .catch(err => console.warn('SW registration failed', err));
     }
   </script>
 
   <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background: #f8f8f8;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* Floating Subscribe Button */
-    #subscribeBtn {
+    html, body { margin:0; height:100%; font-family:Arial,sans-serif; }
+    body { display:flex; align-items:center; justify-content:center; text-align:center; background:#f8f8f8; }
+    h1 { font-size:16px; color:#222; line-height:1.5; padding:20px; }
+    /* Floating buttons */
+    .float-btn {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
       z-index: 9999;
-      padding: 12px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 50px;
-      background-color: #e63946;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+    #subscribeBtn {
+      bottom: 80px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #e63946;
+      font-size: 22px;
       color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    #enterBtn {
+      bottom: 16px;
+      right: 16px;
+      width: 160px;
+      height: 48px;
+      border-radius: 12px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
     }
   </style>
 
-  <!-- Add to Home Screen Logic -->
+  <!-- Add to Home Screen logic -->
   <script>
-    let deferredPrompt;
+    let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      // Optional: show your own A2HS UI
-      console.log('Add to Home Screen prompt available');
+      console.log('A2HS available');
     });
 
-    function addToHomeScreen() {
+    async function promptA2HS() {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        console.log('User choice:', choiceResult.outcome);
-        deferredPrompt = null;
-      });
+      const choice = await deferredPrompt.userChoice;
+      console.log('A2HS result:', choice.outcome);
+      deferredPrompt = null;
+    }
+
+    function enterGlideApp() {
+      const glideUrl = 'https://betpoint.glide.page/';
+      // Opens Glide in same tab so user can Add-to-Home-Screen
+      window.location.href = glideUrl;
     }
   </script>
 </head>
 <body>
+  <h1>
+    Welcome!<br>
+    Add this app to your Home Screen first to enable notifications (iOS requires Add-to-Home-Screen).<br>
+    Then click the red bell to subscribe and Enter App to access Bet Point signals.
+  </h1>
 
-  <!-- Embed Glide app -->
-  <iframe src="https://betpoint.glide.page/dl/063968"></iframe>
-
-  <!-- Floating Subscribe Button -->
-  <button id="subscribeBtn" onclick="OneSignal.push(function() { OneSignal.showNativePrompt(); });">
-    Subscribe
+  <!-- Floating red bell -->
+  <button id="subscribeBtn" class="float-btn" title="Subscribe to notifications"
+    onclick="OneSignal.push(function(){ OneSignal.showNativePrompt(); });">
+    🔔
   </button>
 
+  <!-- Enter main Glide app -->
+  <button id="enterBtn" class="float-btn" onclick="enterGlideApp()">
+    Enter App
+  </button>
+
+  <!-- Optional: A2HS manual prompt -->
+  <button style="position: fixed; bottom: 16px; left: 16px; z-index:9999;" onclick="promptA2HS()">
+    Add Shell to Home Screen
+  </button>
 </body>
 </html>
-
 
 
 
