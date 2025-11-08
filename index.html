@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOTIFICATIONS BET POINT</title>
+  <title>SIGNAL ALERTS BET POINT</title>
 
   <!-- Link to Web App Manifest -->
   <link rel="manifest" href="/manifest.json"/>
@@ -37,18 +37,20 @@
 
   <!-- Styles -->
   <style>
-    body {
+    html, body {
+      margin: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
       background: #f8f8f8;
     }
-    h1 {
-      font-size: 16px;
-      color: #222;
-      line-height: 1.6;
-      margin-bottom: 40px;
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
+
+    /* Add-to-Home-Screen prompt */
     .a2hs-prompt {
       display: none;
       position: fixed;
@@ -60,22 +62,17 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       z-index: 1000;
       border-radius: 10px;
+      text-align: center;
     }
-    button {
+
+    .a2hs-prompt button {
       padding: 12px 20px;
       font-size: 16px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-    }
-    #addBtn {
       background-color: #007bff;
       color: white;
-    }
-    #enterAppBtn {
-      background-color: #e63946;
-      color: white;
-      margin-top: 20px;
     }
   </style>
 
@@ -106,28 +103,18 @@
       document.getElementById('a2hs-prompt').style.display = 'none';
       console.log('PWA was installed');
     });
-
-    function enterApp() {
-      window.location.href = 'https://thebetpoint.app';
-    }
   </script>
 </head>
 <body>
-  <h1>
-    DO NOT CLICK THE RED BELL TO SUBSCRIBE OR UNSUBSCRIBE ON THIS PAGE UNLESS YOU ARE IN THE "SIGNAL ALERTS BET POINT APP". 
-    ADD THIS LINK TO YOUR HOME SCREEN, THEN GO TO THE "SIGNAL ALERTS BET POINT APP" ON YOUR HOME SCREEN AND CLICK THE RED BELL.  
-    FOR iOS CLICK THE BLUE SHARE ARROW THEN "ADD TO HOME SCREEN".  
-    FOR ANDROID IN CHROME CLICK THE THREE DOTS, THEN "ADD TO HOME SCREEN".
-  </h1>
-
-  <!-- Add to Home Screen Prompt -->
+  <!-- Add-to-Home-Screen Prompt -->
   <div id="a2hs-prompt" class="a2hs-prompt">
-    <p>ADD THIS APP TO YOUR HOME SCREEN, THEN CLICK THE RED BELL TO SUBSCRIBE TO NOTIFICATIONS.</p>
-    <button id="addBtn" onclick="addToHomeScreen()">Add to Home Screen</button>
+    <p>ADD THIS APP TO YOUR HOME SCREEN TO ENABLE NOTIFICATIONS.</p>
+    <button onclick="addToHomeScreen()">Add to Home Screen</button>
   </div>
 
-  <!-- Enter App Button -->
-  <button id="enterAppBtn" onclick="enterApp()">Enter App</button>
+  <!-- Embed Glide app -->
+  <iframe src="https://yourapp.glideapp.io"></iframe>
 </body>
 </html>
+
 
