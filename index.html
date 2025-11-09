@@ -32,41 +32,13 @@
   <style>
     html, body { margin:0; height:100%; width:100%; font-family:Arial,sans-serif; }
     body { display:flex; flex-direction:column; }
-
     iframe { flex:1; border:none; width:100%; height:100%; }
-
-    /* Original red bell style at top */
-    #subscribeBtn {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 9999;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #e63946;
-      font-size: 22px;
-      color: white;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    }
   </style>
 </head>
 <body>
-  <!-- Floating red bell subscribe button -->
-  <button id="subscribeBtn" title="Subscribe to notifications"
-    onclick="OneSignal.push(function(){ OneSignal.showNativePrompt(); });">
-    🔔
-  </button>
-
   <!-- Embedded Appsmith App -->
   <iframe src="https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c?embed=true" title="Bet Point Signals App"></iframe>
 </body>
 </html>
-
 
 
