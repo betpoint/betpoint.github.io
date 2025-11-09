@@ -15,7 +15,7 @@
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
         appId: "2b94ad70-2518-44d4-aaef-bfb95739206f",
-        notifyButton: { enable: false } // use custom button
+        notifyButton: { enable: false } // using custom subscribe button
       });
     });
   </script>
@@ -23,16 +23,17 @@
   <!-- Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/OneSignalSDKWorker.js')
+      navigator.serviceWorker.register('/service-worker.js')
         .then(reg => console.log('Service Worker registered', reg.scope))
         .catch(err => console.warn('SW registration failed', err));
     }
   </script>
 
   <style>
-    html, body { margin:0; height:100%; font-family:Arial,sans-serif; }
-    body { display:flex; align-items:center; justify-content:center; text-align:center; background:#f8f8f8; }
-    h1 { font-size:16px; color:#222; line-height:1.5; padding:20px; }
+    html, body { margin:0; height:100%; width:100%; font-family:Arial,sans-serif; }
+    body { display:flex; flex-direction:column; }
+    iframe { flex:1; border:none; width:100%; height:100%; }
+
     /* Floating buttons */
     .float-btn {
       position: fixed;
@@ -66,13 +67,12 @@
     }
   </style>
 
-  <!-- Add to Home Screen logic -->
   <script>
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      console.log('A2HS available');
+      console.log('Add to Home Screen available.');
     });
 
     async function promptA2HS() {
@@ -83,37 +83,41 @@
       deferredPrompt = null;
     }
 
-    function enterGlideApp() {
-      const glideUrl = 'https://betpoint.glide.page';
-      // Opens Glide in same tab so user can Add-to-Home-Screen
-      window.location.href = glideUrl;
+    function enterApp() {
+      // Navigate to the embedded iframe start or maybe open the Appsmith URL directly
+      // If you're embedding via iframe below, we may not need this to do much.
+      const embedUrl = "https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c";
+      window.location.href = embedUrl;
     }
   </script>
 </head>
 <body>
-  <h1>
-    Welcome!<br>
-    Add this app to your Home Screen first to enable notifications (iOS requires Add-to-Home-Screen).<br>
-    Then click the red bell to subscribe and Enter App to access Bet Point signals.
-  </h1>
+  <!-- Appshell message for users who view the shell directly -->
+  <div id="shellIntro" style="text-align:center;padding:20px;">
+    <h1>Welcome!<br>
+      Add this app to your Home Screen first to enable notifications (especially on iOS).<br>
+      Then click the red bell to subscribe and "Enter App" to access Bet Point signals.
+    </h1>
+  </div>
 
-  <!-- Floating red bell -->
+  <!-- Embedded Appsmith App -->
+  <iframe src="https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c" title="Bet Point Signals App"></iframe>
+
+  <!-- Floating Buttons -->
   <button id="subscribeBtn" class="float-btn" title="Subscribe to notifications"
     onclick="OneSignal.push(function(){ OneSignal.showNativePrompt(); });">
     🔔
   </button>
-
-  <!-- Enter main Glide app -->
-  <button id="enterBtn" class="float-btn" onclick="enterGlideApp()">
+  <button id="enterBtn" class="float-btn" onclick="enterApp()">
     Enter App
   </button>
-
-  <!-- Optional: A2HS manual prompt -->
-  <button style="position: fixed; bottom: 16px; left: 16px; z-index:9999;" onclick="promptA2HS()">
-    Add Shell to Home Screen
+  <button style="position: fixed; bottom: 16px; left: 16px; z-index:9999;"
+          onclick="promptA2HS()">
+    Add to Home Screen
   </button>
 </body>
 </html>
+
 
 
 
