@@ -9,65 +9,33 @@
   <link rel="manifest" href="/manifest.json" />
 
   <!-- OneSignal SDK -->
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async></script>
   <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
         appId: "2b94ad70-2518-44d4-aaef-bfb95739206f",
-        notifyButton: { enable: false } // custom bell
+        notifyButton: {
+          enable: true,       // show the official OneSignal bell
+          position: 'bottom-right', // you can change: bottom-left, top-right, top-left
+          prenotify: true,    // show small prompt before actual subscription
+          showCredit: false   // hide "Powered by OneSignal"
+        }
       });
     });
-  </script>
-
-  <!-- Register Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('Service Worker registered', reg.scope))
-        .catch(err => console.warn('SW registration failed', err));
-    }
   </script>
 
   <style>
     html, body { margin:0; height:100%; width:100%; font-family:Arial,sans-serif; }
     body { display:flex; flex-direction:column; }
-
     iframe { flex:1; border:none; width:100%; height:100%; }
-
-    /* Original red bell style at top */
-    #subscribeBtn {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 9999;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #e63946;
-      font-size: 22px;
-      color: white;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    }
   </style>
 </head>
 <body>
-  <!-- Floating red bell subscribe button -->
-  <button id="subscribeBtn" title="Subscribe to notifications"
-    onclick="OneSignal.push(function(){ OneSignal.showNativePrompt(); });">
-    🔔
-  </button>
-
   <!-- Embedded Appsmith App -->
-  <iframe src="https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c" title="Bet Point Signals App"></iframe>
+  <iframe src="https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c?embed=true" title="Bet Point Signals App"></iframe>
 </body>
 </html>
-
 
 
 
