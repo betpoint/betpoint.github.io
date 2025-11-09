@@ -1,119 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Signal Alerts — Bet Point</title>
-
-  <!-- Web App Manifest -->
-  <link rel="manifest" href="/manifest.json" />
-
-  <!-- OneSignal SDK -->
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({
-        appId: "2b94ad70-2518-44d4-aaef-bfb95739206f",
-        notifyButton: { enable: false } // using custom subscribe button
-      });
-    });
-  </script>
-
-  <!-- Register Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('Service Worker registered', reg.scope))
-        .catch(err => console.warn('SW registration failed', err));
+{
+  "name": "Bet Point Signals",
+  "short_name": "BetPoint",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f8f8",
+  "theme_color": "#007bff",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  </script>
+  ]
+}
 
-  <style>
-    html, body { margin:0; height:100%; width:100%; font-family:Arial,sans-serif; }
-    body { display:flex; flex-direction:column; }
-    iframe { flex:1; border:none; width:100%; height:100%; }
-
-    /* Floating buttons */
-    .float-btn {
-      position: fixed;
-      z-index: 9999;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:none;
-      cursor:pointer;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    }
-    #subscribeBtn {
-      bottom: 80px;
-      right: 16px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #e63946;
-      font-size: 22px;
-      color: white;
-    }
-    #enterBtn {
-      bottom: 16px;
-      right: 16px;
-      width: 160px;
-      height: 48px;
-      border-radius: 12px;
-      background: #007bff;
-      color: white;
-      font-size: 16px;
-    }
-  </style>
-
-  <script>
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      console.log('Add to Home Screen available.');
-    });
-
-    async function promptA2HS() {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      console.log('A2HS result:', choice.outcome);
-      deferredPrompt = null;
-    }
-
-    function enterApp() {
-      // Navigate to the embedded iframe start or maybe open the Appsmith URL directly
-      // If you're embedding via iframe below, we may not need this to do much.
-      const embedUrl = "https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c";
-      window.location.href = embedUrl;
-    }
-  </script>
-</head>
-<body>
-  <!-- Appshell message for users who view the shell directly -->
-  <div id="shellIntro" style="text-align:center;padding:20px;">
-    <h1>Welcome!<br>
-      Add this app to your Home Screen first to enable notifications (especially on iOS).<br>
-      Then click the red bell to subscribe and "Enter App" to access Bet Point signals.
-    </h1>
-  </div>
-
-  <!-- Embedded Appsmith App -->
-  <iframe src="https://bet-point.appsmith.com/app/signal/page1-68b217383a43874978908b5c" title="Bet Point Signals App"></iframe>
-
-  <!-- Floating Buttons -->
-  <button id="subscribeBtn" class="float-btn" title="Subscribe to notifications"
-    onclick="OneSignal.push(function(){ OneSignal.showNativePrompt(); });">
-    🔔
-  </button>
-  <button id="enterBtn" class="float-btn" onclick="enterApp()">
-    Enter App
-  </button>
-  <button style="position: fixed; bottom: 16px; left: 16px; z-index:9999;"
-          onclick="promptA2HS()">
-    Add to Home Screen
-  </button>
-</body>
-</html>
